@@ -27,10 +27,18 @@ color_change = False
 color = ""
 run = 0
 color = black
+color_width = 30
+color_height = 30
+track = 0
+r = pygame.Rect(0,0,color_width,color_height)
+colors = []
+for v in range(int(width / color_width)):
+    colors.append((random.randint(0,255),random.randint(0,255),random.randint(0,255)))
+    
 while playing:
 
 
-    
+    x, y = pygame.mouse.get_pos()
 
     for event in pygame.event.get():
         check = True
@@ -54,6 +62,13 @@ while playing:
                 
                 pygame.draw.circle(window,color,(circles[i],circles[i + 1]),size)
             on = False
+            for p in range(len(colors)):
+                if y <= color_height:
+                    if x > track and x < track + color_width:
+                        color = colors[p]
+                    track += color_width
+            track = 0
+                    
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             window.fill(white)
             color = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
@@ -61,7 +76,8 @@ while playing:
                 pygame.draw.circle(window,color,(circles[run],circles[run + 1]),size)
                 run += 2
             run = 0
-                
-            
-
-    pygame.display.flip()                   
+    for a in range(len(colors)):
+        pygame.draw.rect(window,colors[a],r)
+        r.x += color_width
+    r.x = 0
+    pygame.display.flip()             
