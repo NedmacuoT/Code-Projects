@@ -1,1 +1,58 @@
+import random
+import pygame
+pygame.init()
+
+# Width and Height variables for a safe way to adjust window size
+width = 700
+height = 700
+window = pygame.display.set_mode([width,height])
+
+# Color variables for more readability (instead of writing c-tuples later on)
+white = (255,255,255)
+black = (0,0,0)
+red = (255,0,0)
+
+# Main loop to control the main loop and outside of loop functions 
+def main():
+    eloop = True
+    while mloop != False:
+        eloop = eventloop()
+        
+        
+# So I only have to write it once   
+def eventloop():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            return(False)
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+            return("up")
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+            return("down")
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+            return("right")
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+            return("left")
+
+# Distance formula just in case I need it later
+def distance(x,y,c,u):
+    dis = (((c - x) ** 2) + ((u - y) ** 2)) ** 0.5
+    return(dis)
+
+def getLine():
+    lines = []
+    line_width = 80
+    gap = 40
+    first_num = random.randint(10,100)
+    lines.append(first_num)
+    lines.append(first_num + line_width)
+    num = first_num + line_width
+    for i in range(8):
+        num += gap
+        lines.append(num)
+        num += line_width
+        lines.append(num)
+    return(lines)
+       
+main()
+
 
