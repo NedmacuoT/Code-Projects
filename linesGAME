@@ -14,10 +14,47 @@ red = (255,0,0)
 
 # Main loop to control the main loop and outside of loop functions 
 def main():
+
+    # Need timer so that new lines aren't drawn every frame
+    lines_timer = 0
+    clock = pygame.time.Clock()
+    time_between_lines = 3000
+    get = ""
+    break_point = 1500
+    start_track = 500
+    first = True
+    determine = False
+    
     eloop = True
-    while mloop != False:
+    while eloop != False:
         eloop = eventloop()
         
+        lines_timer += clock.get_time()
+        
+        x, y = pygame.mouse.get_pos()
+        # Need to know when to draw more lines
+        if lines_timer >= time_between_lines:
+            window.fill(white)
+            lines_timer = 0
+            get = getLines()
+            drawLines(get)
+            
+            
+        if lines_timer > start_track and lines_timer < break_point and not first:
+              determine = loss_condition(x, get)
+              if not determine:
+                  print("GAME OVER")
+                  eloop = False
+        # Added a break period, so game feels less choppy
+        if lines_timer >= break_point:
+            window.fill(white)
+            first = False
+            
+        
+        
+        
+        pygame.display.flip()
+        clock.tick(60)
         
 # So I only have to write it once   
 def eventloop():
@@ -32,27 +69,48 @@ def eventloop():
             return("right")
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
             return("left")
+        else:
+            return
 
 # Distance formula just in case I need it later
 def distance(x,y,c,u):
     dis = (((c - x) ** 2) + ((u - y) ** 2)) ** 0.5
     return(dis)
 
-def getLine():
+def getLines():
     lines = []
     line_width = 80
-    gap = 40
-    first_num = random.randint(10,100)
+    gap = random.randint(30,50)
+    first_num = random.randint(0,30)
     lines.append(first_num)
     lines.append(first_num + line_width)
     num = first_num + line_width
-    for i in range(8):
+
+    # range(8) is enough to fill screen with lines
+    for l in range(8):
         num += gap
         lines.append(num)
         num += line_width
         lines.append(num)
     return(lines)
-       
+
+# Range of 6 because that is all that will appear on screen 
+def drawLines(lines):
+    x = 0
+    for z in range(6):
+        pygame.draw.polygon(window, black, [(lines[x],0),(lines[x + 1],0),(lines[x + 1],height),(lines[x],height)])
+        x += 2
+        
+def loss_condition(x, lines): 
+    
+    loss = True
+    p = 0
+    for b in range(len(lines) // 2):
+        if x > lines[p] and x < lines[p + 1]:
+            loss = False
+        p += 2
+    return(loss)        
+            
 main()
 
 
